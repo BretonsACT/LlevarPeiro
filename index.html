@@ -6,8 +6,110 @@
   <title>Carpool Cost Splitter - Mejorado</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
+  <style>
+    /* Quick inline styles for the redesign */
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    header {
+      background-image: url('assets/banner.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #fff;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    nav button {
+      margin: 0 1rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    nav button.active {
+      background-color: #0056b3;
+    }
+
+    section {
+      margin: 2rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #007bff;
+    }
+
+    .card {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #f4f4f9;
+    }
+
+    .primary {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .primary:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Carpool Cost Splitter</h1>
+  </header>
+
   <nav>
     <button id="tab-plan" class="active">Planificador</button>
     <button id="tab-config">Configuración</button>
@@ -47,8 +149,6 @@
     </div>
   </section>
 
-<script src="assets/script.js"></script>
-
-
+  <script src="assets/script.js"></script>
 </body>
 </html>
