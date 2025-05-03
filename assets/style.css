@@ -1,0 +1,14 @@
+body { font-family: 'Inter', sans-serif; background: #f5f7fa; margin: 0; padding: 0; }
+nav { background: #4a90e2; display: flex; justify-content: center; padding: 10px; }
+nav button { background: transparent; border: none; color: white; padding: 10px 20px; cursor: pointer; font-size: 16px; }
+nav button.active { border-bottom: 3px solid #fff; font-weight: bold; }
+section { display: none; padding: 20px; animation: fadeIn 0.5s; }
+section.active { display: block; }
+.card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 20px; }
+label { display: block; margin: 10px 0 5px; }
+input, select { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px; }
+button.primary { background: #4a90e2; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { padding: 10px; text-align: center; border-bottom: 1px solid #ddd; }
+th { background: #f0f2f5; }
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
