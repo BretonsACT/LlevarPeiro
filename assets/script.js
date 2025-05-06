@@ -60,6 +60,7 @@ document.getElementById('add-ride').addEventListener('click', () => {
     saveData();
     renderRides();
     renderGasPrices();
+    populateMonthSelect(); // Actualizar selector después de añadir un viaje
   }
 });
 
@@ -132,55 +133,71 @@ document.addEventListener("DOMContentLoaded", () => {
   populateMonthSelect(); // Llenar el selector de meses al cargar la página
 });
 
-function generateMonthlyReport(month) {
-  // Filter rides for the selected month
-  const ridesForMonth = rides.filter(dateStr => {
-    const rideDate = new Date(dateStr);
-    const rideMonth = rideDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-    return rideMonth === month;
-  });
+function generateMonthlyReport(monthValue) {
+    // Convertir el valor del selector (YYYY-MM) a Date para comparar
+    const [year, month] = monthValue.split('-');
+    
+    // Filtrar viajes para el mes seleccionado
+    const ridesForMonth = rides.filter(dateStr => {
+        const rideDate = new Date(dateStr);
+        return rideDate.getFullYear() === parseInt(year) && 
+               rideDate.getMonth() === parseInt(month) - 1;
+    });
 
-  if (ridesForMonth.length === 0) {
-    return null; // No data for the selected month
-  }
+    if (ridesForMonth.length === 0) {
+        return null;
+    }
 
-  // Calculate total trips, distance, and costs
-  const trips = ridesForMonth.length;
-  const totalDistance = trips * distance; // Total distance in km
-  const gasPricePerLiter = gasPrices[month] || 1.50; // Default gas price if not set
-  const totalCost = (totalDistance / 100) * gasPricePerLiter * 6.5; // Total cost based on 6.5 liters/100 km
-  const yourShare = totalCost / 2; // Split cost between two people
+    // Calculate total trips, distance, and costs
+    const trips = ridesForMonth.length;
+    const totalDistance = trips * distance; // Total distance in km
+    const gasPricePerLiter = gasPrices[month] || 1.50; // Default gas price if not set
+    const totalCost = (totalDistance / 100) * gasPricePerLiter * 6.5; // Total cost based on 6.5 liters/100 km
+    const yourShare = totalCost / 2; // Split cost between two people
 
-  // Calculate CO2 generated (2.31 kg CO2 per liter of gasoline)
-  const litersUsed = (totalDistance / 100) * 6.5; // Total liters of gasoline used
-  const co2Generated = litersUsed * 2.31; // CO2 in kilograms
+    // Calculate CO2 generated (2.31 kg CO2 per liter of gasoline)
+    const litersUsed = (totalDistance / 100) * 6.5; // Total liters of gasoline used
+    const co2Generated = litersUsed * 2.31; // CO2 in kilograms
 
-  return {
-    trips,
-    totalDistance,
-    totalCost,
-    yourShare,
-    co2Saved: co2Generated.toFixed(2) // Round CO2 to 2 decimal places
-  };
+    return {
+        trips,
+        totalDistance,
+        totalCost,
+        yourShare,
+        co2Saved: co2Generated.toFixed(2) // Round CO2 to 2 decimal places
+    };
 }
 
 function populateMonthSelect() {
-  const monthSelect = document.getElementById("month-select");
-  monthSelect.innerHTML = '<option value="" disabled selected>Elige un mes</option>'; // Reset options
+    const monthSelect = document.getElementById("month-select");
+    monthSelect.innerHTML = '<option value="" disabled selected>Elige un mes</option>';
 
-  // Obtener meses únicos de los datos de rides
-  const months = [...new Set(rides.map(dateStr => {
-    const rideDate = new Date(dateStr);
-    return rideDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-  }))];
+    // Obtener fechas únicas y ordenarlas
+    const uniqueDates = [...new Set(rides)].map(dateStr => new Date(dateStr))
+        .sort((a, b) => b - a); // Ordenar de más reciente a más antiguo
 
-  // Crear opciones para cada mes disponible
-  months.forEach(month => {
-    const option = document.createElement("option");
-    option.value = month; // Usar el mes como valor
-    option.textContent = month; // Mostrar el mes en texto
-    monthSelect.appendChild(option);
-  });
+    // Convertir fechas a formato mes-año
+    const monthYears = uniqueDates.map(date => {
+        const month = date.toLocaleString('es-ES', { month: 'long' });
+        const year = date.getFullYear();
+        return {
+            value: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`,
+            text: `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`
+        };
+    });
+
+    // Filtrar duplicados por valor (mes-año)
+    const uniqueMonthYears = monthYears.filter((monthYear, index, self) =>
+        index === self.findIndex((m) => m.value === monthYear.value)
+    );
+
+    // Crear opciones para cada mes disponible
+    uniqueMonthYears.forEach(({ value, text }) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = text;
+        monthSelect.appendChild(option);
+    });
 }
 
 // Llamar a esta función cuando se cargue la página o cambien los datos
