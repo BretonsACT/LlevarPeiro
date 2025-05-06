@@ -89,5 +89,63 @@ function renderSummary() {
   });
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Button and dropdown references
+  const generateReportButton = document.getElementById("generate-report");
+  const markPaidButton = document.getElementById("mark-paid");
+  const monthSelect = document.getElementById("month-select");
+
+  // Event listener for "Generar Reporte"
+  generateReportButton.addEventListener("click", () => {
+    const selectedMonth = monthSelect.value;
+    if (!selectedMonth) {
+      alert("Por favor, selecciona un mes.");
+      return;
+    }
+
+    const reportData = generateMonthlyReport(selectedMonth); // Generate report data
+    if (reportData) {
+      alert(`Reporte generado para ${selectedMonth}:\n\n` +
+        `- Viajes: ${reportData.trips}\n` +
+        `- Distancia Total: ${reportData.totalDistance} km\n` +
+        `- Costo Total: €${reportData.totalCost}\n` +
+        `- Tu Parte: €${reportData.yourShare}\n` +
+        `- CO2 Ahorrado: ${reportData.co2Saved} kg`);
+    } else {
+      alert("No hay datos disponibles para el mes seleccionado.");
+    }
+  });
+
+  // Event listener for "Marcar como Pagado"
+  markPaidButton.addEventListener("click", () => {
+    const selectedMonth = monthSelect.value;
+    if (!selectedMonth) {
+      alert("Por favor, selecciona un mes.");
+      return;
+    }
+
+    markMonthAsPaid(selectedMonth); // Mark the month as paid
+    alert(`El mes ${selectedMonth} ha sido marcado como pagado.`);
+  });
+});
+
+// Function to generate a monthly report (mock implementation)
+function generateMonthlyReport(month) {
+  // Replace this with actual logic to fetch and calculate data
+  return {
+    trips: 15,
+    totalDistance: 300,
+    totalCost: 120,
+    yourShare: 60,
+    co2Saved: 25
+  };
+}
+
+// Function to mark a month as paid (mock implementation)
+function markMonthAsPaid(month) {
+  // Replace this with actual logic to update the data
+  console.log(`Mes ${month} marcado como pagado.`);
+}
+
 renderRides();
 renderGasPrices();
