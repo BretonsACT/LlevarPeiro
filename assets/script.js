@@ -128,6 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
     markMonthAsPaid(selectedMonth); // Mark the month as paid
     alert(`El mes ${selectedMonth} ha sido marcado como pagado.`);
   });
+
+  populateMonthSelect(); // Llenar el selector de meses al cargar la página
 });
 
 function generateMonthlyReport(month) {
@@ -161,6 +163,30 @@ function generateMonthlyReport(month) {
     co2Saved: co2Generated.toFixed(2) // Round CO2 to 2 decimal places
   };
 }
+
+function populateMonthSelect() {
+  const monthSelect = document.getElementById("month-select");
+  monthSelect.innerHTML = '<option value="" disabled selected>Elige un mes</option>'; // Reset options
+
+  // Obtener meses únicos de los datos de rides
+  const months = [...new Set(rides.map(dateStr => {
+    const rideDate = new Date(dateStr);
+    return rideDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+  }))];
+
+  // Crear opciones para cada mes disponible
+  months.forEach(month => {
+    const option = document.createElement("option");
+    option.value = month; // Usar el mes como valor
+    option.textContent = month; // Mostrar el mes en texto
+    monthSelect.appendChild(option);
+  });
+}
+
+// Llamar a esta función cuando se cargue la página o cambien los datos
+document.addEventListener("DOMContentLoaded", () => {
+  populateMonthSelect(); // Llenar el selector de meses al cargar la página
+});
 
 renderRides();
 renderGasPrices();
