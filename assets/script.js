@@ -123,28 +123,43 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Por favor, selecciona un mes.");
       return;
     }
+    
 
     markMonthAsPaid(selectedMonth); // Mark the month as paid
     alert(`El mes ${selectedMonth} ha sido marcado como pagado.`);
   });
 });
 
-// Function to generate a monthly report (mock implementation)
 function generateMonthlyReport(month) {
-  // Replace this with actual logic to fetch and calculate data
-  return {
-    trips: 15,
-    totalDistance: 300,
-    totalCost: 120,
-    yourShare: 60,
-    co2Saved: 25
-  };
-}
+  // Filter rides for the selected month
+  const ridesForMonth = rides.filter(dateStr => {
+    const rideDate = new Date(dateStr);
+    const rideMonth = rideDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+    return rideMonth === month;
+  });
 
-// Function to mark a month as paid (mock implementation)
-function markMonthAsPaid(month) {
-  // Replace this with actual logic to update the data
-  console.log(`Mes ${month} marcado como pagado.`);
+  if (ridesForMonth.length === 0) {
+    return null; // No data for the selected month
+  }
+
+  // Calculate total trips, distance, and costs
+  const trips = ridesForMonth.length;
+  const totalDistance = trips * distance; // Total distance in km
+  const gasPricePerLiter = gasPrices[month] || 1.50; // Default gas price if not set
+  const totalCost = (totalDistance / 100) * gasPricePerLiter * 6.5; // Total cost based on 6.5 liters/100 km
+  const yourShare = totalCost / 2; // Split cost between two people
+
+  // Calculate CO2 generated (2.31 kg CO2 per liter of gasoline)
+  const litersUsed = (totalDistance / 100) * 6.5; // Total liters of gasoline used
+  const co2Generated = litersUsed * 2.31; // CO2 in kilograms
+
+  return {
+    trips,
+    totalDistance,
+    totalCost,
+    yourShare,
+    co2Saved: co2Generated.toFixed(2) // Round CO2 to 2 decimal places
+  };
 }
 
 renderRides();
